@@ -1,32 +1,22 @@
-# Terraform configuration
-
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-    }
-  }
-}
-
 provider "aws" {
   region = "us-east-2"
 }
 
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "2.21.0"
+# module "vpc" {
+#   source  = "terraform-aws-modules/vpc/aws"
+#   version = "2.21.0"
 
-  name = var.vpc_name
-  cidr = var.vpc_cidr
+#   name = var.vpc_name
+#   cidr = var.vpc_cidr
 
-  azs             = var.vpc_azs
-  private_subnets = var.vpc_private_subnets
-  public_subnets  = var.vpc_public_subnets
+#   azs             = var.vpc_azs
+#   private_subnets = var.vpc_private_subnets
+#   public_subnets  = var.vpc_public_subnets
 
-  enable_nat_gateway = var.vpc_enable_nat_gateway
+#   enable_nat_gateway = var.vpc_enable_nat_gateway
 
-  tags = var.vpc_tags
-}
+#   tags = var.vpc_tags
+# }
 
 # module "ec2_instances" {
 #   source  = "terraform-aws-modules/ec2-instance/aws"
@@ -45,3 +35,14 @@ module "vpc" {
 #     Environment = "dev"
 #   }
 # }
+
+module "website_bucket" {
+    source = "modules/aws-s3-static-website-bucket"
+
+    bucket_name = "epsi-namumu"
+
+    tags = {
+        Terraform = "true"
+        Environment = "dev"
+    }
+}
