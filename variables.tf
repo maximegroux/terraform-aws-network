@@ -1,7 +1,12 @@
 # Input variable definitions
 
 variable "region" {
-  description = "Name of region"
+  description = "region for vpc"
+  type = string
+}
+
+variable "zone" {
+  description = "availability zone for subnet"
   type = string
 }
 

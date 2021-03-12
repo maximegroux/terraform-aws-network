@@ -7,9 +7,9 @@ resource "aws_vpc" "VPC" {
 }
 
 resource "aws_subnet" "public-a" {
-  vpc_id     = aws_vpc.epsi-tf.id
+  vpc_id     = aws_vpc.VPC.id
   cidr_block = element(var.cidr_blocks, 0)
-  availability_zone = "us-east-1a"
+  availability_zone = var.zone
   
   tags = {
     Name = "public-a-tf"
