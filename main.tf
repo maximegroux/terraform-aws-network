@@ -1,48 +1,47 @@
-provider "aws" {
-  region = "us-east-2"
+resource "aws_vpc" "VPC" {
+  cidr_block = var.cidr_vpc
+  
+  tags = {
+    Name = var.vpc_name
+  }
 }
 
-# module "vpc" {
-#   source  = "terraform-aws-modules/vpc/aws"
-#   version = "2.21.0"
+resource "aws_subnet" "public" {
+  vpc_id     = aws_vpc.VPC.id
+  cidr_block = var.cidr_public
+  availability_zone = var.vpc_name
+  
+  tags = {
+    Name = "public-tf"
+  }
+}
 
-#   name = var.vpc_name
-#   cidr = var.vpc_cidr
+resource "aws_subnet" "private" {
+  vpc_id     = aws_vpc.VPC.id
+  cidr_block = var.cidr_private
+  availability_zone = var.vpc_name
+  
+  tags = {
+    Name = "private-tf"
+  }
+}
 
-#   azs             = var.vpc_azs
-#   private_subnets = var.vpc_private_subnets
-#   public_subnets  = var.vpc_public_subnets
+resource "aws_internet_gateway" "IGW-tf" {
+  vpc_id = aws_vpc.VPC.id
 
-#   enable_nat_gateway = var.vpc_enable_nat_gateway
+  tags = {
+    Name = "igw-tf"
+  }
+}
 
-#   tags = var.vpc_tags
-# }
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.VPC.id
+  route {
+  cidr_block = "0.0.0.0/0"
+  gateway_id = aws_internet_gateway.IGW-tf.id
+}
 
-# module "ec2_instances" {
-#   source  = "terraform-aws-modules/ec2-instance/aws"
-#   version = "2.12.0"
-
-#   name           = "my-ec2-cluster"
-#   instance_count = 2
-
-#   ami                    = "ami-0c5204531f799e0c6"
-#   instance_type          = "t2.micro"
-#   vpc_security_group_ids = [module.vpc.default_security_group_id]
-#   subnet_id              = module.vpc.public_subnets[0]
-
-#   tags = {
-#     Terraform   = "true"
-#     Environment = "dev"
-#   }
-# }
-
-module "website_bucket" {
-    source = "modules/aws-s3-static-website-bucket"
-
-    bucket_name = "epsi-namumu"
-
-    tags = {
-        Terraform = "true"
-        Environment = "dev"
-    }
+  tags = {
+    Name = "public-tf"
+  }
 }
