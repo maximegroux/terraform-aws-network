@@ -1,10 +1,5 @@
 # Input variable definitions
 
-variable "zone" {
-  description = "availability zone for subnet"
-  type = string
-}
-
 variable "vpc_name" {
   description = "vpc_name"
   type = string

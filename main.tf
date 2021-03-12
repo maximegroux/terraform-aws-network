@@ -11,19 +11,20 @@ locals {
   addrs_by_name = { for i, n in var.networks : n.name => local.addrs_by_idx[i] if n.name != null }
   network_objs = [for i, n in var.networks : {
     name       = n.name
+    zone       = n.zone
     new_bits   = n.new_bits
     cidr_block = n.name != null ? local.addrs_by_idx[i] : tostring(null)
   }]
 }
 
 resource "aws_subnet" "public-subnet" {
-  count = length(local.addrs_by_idx)
+  count = length(local.network_objs)
   vpc_id     = aws_vpc.VPC.id
-  cidr_block = element(var.addrs_by_idx, index.count-1)
-  availability_zone = var.zone
+  cidr_block = element(local.network_objs.cidr_block, count-1)
+  availability_zone = element(local.network_objs.zone, count-1)
   
   tags = {
-    Name = "public-subnet"
+    Name = element(local.network_objs.name, count-1)
   }
 }
 
@@ -45,4 +46,11 @@ resource "aws_route_table" "public" {
   tags = {
     Name = "default-route"
   }
+}
+
+
+resource "aws_route_table_association" "public" {
+  count = length(local.addrs_by_idx)
+  subnet_id = aws_subnet.public-subnet[count-1].id
+  route_table_id = aws_route_table.public.id
 }
