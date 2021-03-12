@@ -17,7 +17,7 @@ locals {
   }]
 }
 
-resource "aws_subnet" "public-subnet" {
+resource "aws_subnet" "subnet" {
   count = length(local.network_objs)
   vpc_id     = aws_vpc.VPC.id
   cidr_block = element(local.network_objs.cidr_block, count-1)
@@ -46,11 +46,4 @@ resource "aws_route_table" "public" {
   tags = {
     Name = "default-route"
   }
-}
-
-
-resource "aws_route_table_association" "public" {
-  count = length(local.addrs_by_idx)
-  subnet_id = aws_subnet.public-subnet[count-1].id
-  route_table_id = aws_route_table.public.id
 }
