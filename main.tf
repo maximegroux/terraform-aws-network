@@ -6,23 +6,13 @@ resource "aws_vpc" "VPC" {
   }
 }
 
-resource "aws_subnet" "public" {
-  vpc_id     = aws_vpc.VPC.id
-  cidr_block = var.cidr_public
-  availability_zone = var.vpc_name
+resource "aws_subnet" "public-a" {
+  vpc_id     = aws_vpc.epsi-tf.id
+  cidr_block = element(var.cidr_blocks, 0)
+  availability_zone = "us-east-1a"
   
   tags = {
-    Name = "public-tf"
-  }
-}
-
-resource "aws_subnet" "private" {
-  vpc_id     = aws_vpc.VPC.id
-  cidr_block = var.cidr_private
-  availability_zone = var.vpc_name
-  
-  tags = {
-    Name = "private-tf"
+    Name = "public-a-tf"
   }
 }
 
@@ -42,6 +32,6 @@ resource "aws_route_table" "public" {
 }
 
   tags = {
-    Name = "public-tf"
+    Name = "default-route"
   }
 }

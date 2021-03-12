@@ -8,8 +8,7 @@ module "network" {
     vpc_name = var.vpc_name
     zone_name = var.zone_name
     cidr_vpc = var.cidr_vpc
-    cidr_public = var.cidr_public
-    cidr_private = var.cidr_private
+    cidr_blocks = var.cidr_blocks
 
     tags = {
         Terraform = "true"
