@@ -20,7 +20,7 @@ variable "cidr_vpc" {
   type = string
 }
 
-variable "cidr_blocks" {
-  description = "cidr for subnets"
+variable "networks" {
+  description = "value for subnets"
   type = list
 }

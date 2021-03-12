@@ -3,12 +3,12 @@ provider "aws" {
 }
 
 module "network" {
-    source = "modules/aws-network"
+    source = "../"
 
     vpc_name = var.vpc_name
-    zone_name = var.zone_name
+    zone = var.zone
     cidr_vpc = var.cidr_vpc
-    cidr_blocks = var.cidr_blocks
+    networks = var.networks
 
     tags = {
         Terraform = "true"
